@@ -1,0 +1,4 @@
+rootProject.name = 'dpi'
+include 'JavaFXUI'
+findProject(':JavaFXUI')?.name = 'ui'
+
