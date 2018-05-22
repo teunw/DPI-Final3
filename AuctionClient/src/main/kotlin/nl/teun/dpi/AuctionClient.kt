@@ -1,7 +1,5 @@
 package nl.teun.dpi
 
-fun main(args:Array<String>) {
+import javafx.collections.FXCollections
+import tornadofx.*
 
-    println("Auctions present")
-
-}

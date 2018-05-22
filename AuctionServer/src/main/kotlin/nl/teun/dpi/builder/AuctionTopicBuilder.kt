@@ -2,6 +2,7 @@ package nl.teun.dpi.builder
 
 import java.util.*
 
+@Deprecated("Use KBus")
 class AuctionTopicBuilder(
         val auctionTarget: String = "*",
         val messageType: String = "*",

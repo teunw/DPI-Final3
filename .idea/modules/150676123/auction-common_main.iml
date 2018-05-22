@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id="AuctionClient:main" external.linked.project.path="$MODULE_DIR$/../../AuctionClient" external.root.project.path="$MODULE_DIR$/../../AuctionClient" external.system.id="GRADLE" external.system.module.group="dpi-final-console" external.system.module.type="sourceSet" external.system.module.version="1.0-SNAPSHOT" type="JAVA_MODULE" version="4">
+<module external.linked.project.id=":auction-common:main" external.linked.project.path="$MODULE_DIR$/../../../AuctionCommon" external.root.project.path="$MODULE_DIR$/../../../AuctionClient" external.system.id="GRADLE" external.system.module.group="dpi-final-console" external.system.module.type="sourceSet" external.system.module.version="1.0-SNAPSHOT" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="kotlin-language" name="Kotlin">
       <configuration version="3" platform="JVM 1.8" useProjectSettings="false">
         <compilerSettings />
         <compilerArguments>
-          <option name="destination" value="$MODULE_DIR$/../../AuctionClient/build/classes/kotlin/main" />
+          <option name="destination" value="$MODULE_DIR$/../../../AuctionCommon/build/classes/kotlin/main" />
           <option name="noStdlib" value="true" />
           <option name="noReflect" value="true" />
-          <option name="moduleName" value="AuctionClient" />
+          <option name="moduleName" value="auction-common" />
           <option name="jvmTarget" value="1.8" />
           <option name="addCompilerBuiltIns" value="true" />
           <option name="loadBuiltInsFromDependencies" value="true" />
@@ -25,22 +25,18 @@
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
-    <output url="file://$MODULE_DIR$/../../AuctionClient/out/production/classes" />
+    <output url="file://$MODULE_DIR$/../../../AuctionCommon/out/production/classes" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../AuctionClient/src/main">
-      <sourceFolder url="file://$MODULE_DIR$/../../AuctionClient/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../AuctionClient/src/main/kotlin" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../AuctionClient/src/main/resources" type="java-resource" />
+    <content url="file://$MODULE_DIR$/../../../AuctionCommon/src/main">
+      <sourceFolder url="file://$MODULE_DIR$/../../../AuctionCommon/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../AuctionCommon/src/main/kotlin" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../AuctionCommon/src/main/resources" type="java-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Gradle: no.tornado:tornadofx:1.7.16" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.41" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.41" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-reflect:1.2.41" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.2.41" level="project" />
-    <orderEntry type="library" name="Gradle: org.glassfish:javax.json:1.1.2" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
-    <orderEntry type="library" name="Gradle: javax.json:javax.json-api:1.1.2" level="project" />
   </component>
 </module>

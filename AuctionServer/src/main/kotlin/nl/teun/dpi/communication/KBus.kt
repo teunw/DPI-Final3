@@ -7,18 +7,13 @@ import nl.teun.dpi.fromJson
 import nl.teun.dpi.toJson
 import java.io.IOException
 import java.nio.charset.Charset
-import kotlin.concurrent.thread
 
-@Deprecated("Use KBus")
-class CommunicationSubscriber(
-        private val auctionTopic: String
-) {
+
+class KBus {
 
     private val connection: Connection
     val channel: Channel
     val queueName: String
-
-    constructor(auctionTopicBuilder: AuctionTopicBuilder) : this(auctionTopicBuilder.build())
 
     init {
         val connectionFactory = ConnectionFactory()
@@ -30,35 +25,28 @@ class CommunicationSubscriber(
         this.channel.exchangeDeclare(AuctionTopicBuilder.auctionExchange, BuiltinExchangeType.TOPIC)
         this.channel.exchangeDeclare(AuctionTopicBuilder.auctionExchange, "topic")
         this.queueName = channel.queueDeclare().queue
-
-        this.channel.queueBind(this.queueName, AuctionTopicBuilder.auctionExchange, this.auctionTopic)
     }
 
-
-    fun sendMessage(obj: Any) {
-        this.sendMessage(obj.toJson())
-    }
-
-    fun sendMessage(str: String) {
-        this.channel.basicPublish(AuctionTopicBuilder.auctionExchange, this.auctionTopic, null, str.toByteArray(DefaultCharset))
+    inline fun <reified T : Any> sendMessage(obj:T) {
+        this.channel.queueBind(this.queueName, AuctionTopicBuilder.auctionExchange, T::class.java.canonicalName)
+        this.channel.basicPublish(AuctionTopicBuilder.auctionExchange, this.getQueueNameForType<T>(), null, obj.toJson().toByteArray(DefaultCharset))
     }
 
     inline fun <reified T> subscribe(crossinline onMessage: (msg: T) -> Unit) {
-        this.subscribeAdvanced<T> { msg, _ -> onMessage(msg) }
-    }
-
-    inline fun <reified T> subscribeAdvanced(crossinline onMessage: (msg: T, envelope: Envelope) -> Unit) {
+        this.channel.queueBind(this.queueName, AuctionTopicBuilder.auctionExchange, this.getQueueNameForType<T>())
         val consumer = object : DefaultConsumer(channel) {
             @Throws(IOException::class)
             override fun handleDelivery(consumerTag: String, envelope: Envelope,
                                         properties: AMQP.BasicProperties?, body: ByteArray?) {
                 val message = String(body!!, DefaultCharset)
                 val obj = Gson().fromJson<T>(message)
-                onMessage(obj, envelope)
+                onMessage(obj)
             }
         }
         channel.basicConsume(queueName, true, consumer)
     }
+
+    inline fun <reified T> getQueueNameForType():String = T::class.qualifiedName!!
 
     companion object {
         val QueueAddress = "teunwillems.nl"

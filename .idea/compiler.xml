@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="auction-common_main" target="1.8" />
+      <module name="auction-common_test" target="1.8" />
+      <module name="AuctionClient_main" target="1.8" />
+      <module name="AuctionClient_test" target="1.8" />
+      <module name="AuctionCommon_main" target="1.8" />
+      <module name="AuctionCommon_test" target="1.8" />
+      <module name="dpi_main" target="1.8" />
+      <module name="dpi_test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
