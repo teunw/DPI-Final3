@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AuctionClient.iml" filepath="$PROJECT_DIR$/.idea/modules/AuctionClient.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AuctionClient_main.iml" filepath="$PROJECT_DIR$/.idea/modules/AuctionClient_main.iml" group="AuctionClient" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AuctionClient_test.iml" filepath="$PROJECT_DIR$/.idea/modules/AuctionClient_test.iml" group="AuctionClient" />
       <module fileurl="file://$PROJECT_DIR$/DjangoBackend/DjangoBackend.iml" filepath="$PROJECT_DIR$/DjangoBackend/DjangoBackend.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/dpi.iml" filepath="$PROJECT_DIR$/.idea/modules/dpi.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/dpi_main.iml" filepath="$PROJECT_DIR$/.idea/modules/dpi_main.iml" group="dpi" />
