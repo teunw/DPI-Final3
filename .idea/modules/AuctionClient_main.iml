@@ -28,9 +28,7 @@
     <output url="file://$MODULE_DIR$/../../AuctionClient/out/production/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../AuctionClient/src/main">
-      <sourceFolder url="file://$MODULE_DIR$/../../AuctionClient/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../AuctionClient/src/main/kotlin" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../AuctionClient/src/main/resources" type="java-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -42,5 +40,6 @@
     <orderEntry type="library" name="Gradle: org.glassfish:javax.json:1.1.2" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
     <orderEntry type="library" name="Gradle: javax.json:javax.json-api:1.1.2" level="project" />
+    <orderEntry type="module" module-name="dpi_main" />
   </component>
 </module>
