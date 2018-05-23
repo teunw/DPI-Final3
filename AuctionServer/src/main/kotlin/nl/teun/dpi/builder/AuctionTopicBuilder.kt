@@ -1,7 +1,5 @@
 package nl.teun.dpi.builder
 
-import java.util.*
-
 @Deprecated("Use KBus")
 class AuctionTopicBuilder(
         val auctionTarget: String = "*",
@@ -14,6 +12,5 @@ class AuctionTopicBuilder(
     fun build() = "${this.auctionTarget}.${this.messageType}${this.getIdTargetIfNotNull()}"
 
     companion object {
-        val auctionExchange = "DpiAuctionExchange"
     }
 }

@@ -2,39 +2,25 @@ package nl.teun.dpi.communication
 
 import com.google.gson.Gson
 import com.rabbitmq.client.*
-import nl.teun.dpi.builder.AuctionTopicBuilder
+import nl.teun.dpi.communication.CommConstants.Companion.AuctionExchange
+import nl.teun.dpi.communication.CommConstants.Companion.DefaultCharset
 import nl.teun.dpi.fromJson
 import nl.teun.dpi.toJson
 import java.io.IOException
-import java.nio.charset.Charset
 
 
 class KBus {
 
-    private val connection: Connection
-    val channel: Channel
-    val queueName: String
+    val rabbitUtil = RabbitUtil()
 
-    init {
-        val connectionFactory = ConnectionFactory()
-        connectionFactory.host = QueueAddress
-        this.connection = connectionFactory.newConnection()
-
-        this.channel = this.connection.createChannel()
-
-        this.channel.exchangeDeclare(AuctionTopicBuilder.auctionExchange, BuiltinExchangeType.TOPIC)
-        this.channel.exchangeDeclare(AuctionTopicBuilder.auctionExchange, "topic")
-        this.queueName = channel.queueDeclare().queue
+    inline fun <reified T : Any> sendMessage(obj: T) {
+        rabbitUtil.channel.queueBind(rabbitUtil.queueName, AuctionExchange, T::class.java.canonicalName)
+        rabbitUtil.channel.basicPublish(AuctionExchange, this.getQueueNameForType<T>(), null, obj.toJson().toByteArray(DefaultCharset))
     }
 
-    inline fun <reified T : Any> sendMessage(obj:T) {
-        this.channel.queueBind(this.queueName, AuctionTopicBuilder.auctionExchange, T::class.java.canonicalName)
-        this.channel.basicPublish(AuctionTopicBuilder.auctionExchange, this.getQueueNameForType<T>(), null, obj.toJson().toByteArray(DefaultCharset))
-    }
-
-    inline fun <reified T> subscribe(crossinline onMessage: (msg: T) -> Unit) {
-        this.channel.queueBind(this.queueName, AuctionTopicBuilder.auctionExchange, this.getQueueNameForType<T>())
-        val consumer = object : DefaultConsumer(channel) {
+    inline fun <reified T : Any> subscribe(crossinline onMessage: (msg: T) -> Unit) {
+        this.rabbitUtil.channel.queueBind(rabbitUtil.queueName, AuctionExchange, this.getQueueNameForType<T>())
+        val consumer = object : DefaultConsumer(rabbitUtil.channel) {
             @Throws(IOException::class)
             override fun handleDelivery(consumerTag: String, envelope: Envelope,
                                         properties: AMQP.BasicProperties?, body: ByteArray?) {
@@ -43,13 +29,8 @@ class KBus {
                 onMessage(obj)
             }
         }
-        channel.basicConsume(queueName, true, consumer)
+        rabbitUtil.channel.basicConsume(rabbitUtil.queueName, true, consumer)
     }
 
-    inline fun <reified T> getQueueNameForType():String = T::class.qualifiedName!!
-
-    companion object {
-        val QueueAddress = "teunwillems.nl"
-        val DefaultCharset = Charset.forName("UTF-8")
-    }
+    inline fun <reified T> getQueueNameForType(): String = T::class.qualifiedName!!
 }

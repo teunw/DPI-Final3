@@ -3,6 +3,9 @@ package nl.teun.dpi.communication
 import com.google.gson.Gson
 import com.rabbitmq.client.*
 import nl.teun.dpi.builder.AuctionTopicBuilder
+import nl.teun.dpi.communication.CommConstants.Companion.AuctionExchange
+import nl.teun.dpi.communication.CommConstants.Companion.DefaultCharset
+import nl.teun.dpi.communication.CommConstants.Companion.QueueAddress
 import nl.teun.dpi.fromJson
 import nl.teun.dpi.toJson
 import java.io.IOException
@@ -27,11 +30,11 @@ class CommunicationSubscriber(
 
         this.channel = this.connection.createChannel()
 
-        this.channel.exchangeDeclare(AuctionTopicBuilder.auctionExchange, BuiltinExchangeType.TOPIC)
-        this.channel.exchangeDeclare(AuctionTopicBuilder.auctionExchange, "topic")
+        this.channel.exchangeDeclare(AuctionExchange, BuiltinExchangeType.TOPIC)
+        this.channel.exchangeDeclare(AuctionExchange, "topic")
         this.queueName = channel.queueDeclare().queue
 
-        this.channel.queueBind(this.queueName, AuctionTopicBuilder.auctionExchange, this.auctionTopic)
+        this.channel.queueBind(this.queueName, AuctionExchange, this.auctionTopic)
     }
 
 
@@ -40,7 +43,7 @@ class CommunicationSubscriber(
     }
 
     fun sendMessage(str: String) {
-        this.channel.basicPublish(AuctionTopicBuilder.auctionExchange, this.auctionTopic, null, str.toByteArray(DefaultCharset))
+        this.channel.basicPublish(AuctionExchange, this.auctionTopic, null, str.toByteArray(DefaultCharset))
     }
 
     inline fun <reified T> subscribe(crossinline onMessage: (msg: T) -> Unit) {
@@ -61,7 +64,6 @@ class CommunicationSubscriber(
     }
 
     companion object {
-        val QueueAddress = "teunwillems.nl"
-        val DefaultCharset = Charset.forName("UTF-8")
+
     }
 }

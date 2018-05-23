@@ -28,11 +28,9 @@
     <output url="file://$MODULE_DIR$/../../AuctionServer/out/production/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../AuctionServer/src/main">
-      <sourceFolder url="file://$MODULE_DIR$/../../AuctionServer/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../AuctionServer/src/main/kotlin" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../AuctionServer/src/main/resources" type="java-resource" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="OpenJDK 8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.41" level="project" />
     <orderEntry type="library" name="Gradle: com.rabbitmq:amqp-client:5.2.0" level="project" />
