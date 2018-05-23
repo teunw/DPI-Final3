@@ -1,7 +1,7 @@
 package nl.teun.dpi.client
 
 import javafx.application.Application
-import nl.teun.dpi.client.app.AuctionForm
+import nl.teun.dpi.client.app.AuctionList
 import nl.teun.dpi.client.app.AuctionStyle
 import tornadofx.App
 import nl.teun.dpi.server.communication.messaging.KBusRequestReply
@@ -17,4 +17,4 @@ fun main(args: Array<String>) {
     Application.launch(CustomerApp::class.java, *args)
 }
 
-class CustomerApp : App(AuctionForm::class, AuctionStyle::class)
+class CustomerApp : App(AuctionList::class, AuctionStyle::class)

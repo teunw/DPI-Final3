@@ -5,4 +5,6 @@ data class Auction(
         val itemName: String,
         val creator: User? = null,
         val bids: MutableList<Bid> = mutableListOf()
-)
+) {
+    override fun toString() = "$itemName sold by ${creator?.username ?: ""}"
+}

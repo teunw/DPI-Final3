@@ -29,10 +29,7 @@ ALLOWED_HOSTS = []
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-ASGI_APPLICATION = "DjangoBackend.routing.application"
-
 INSTALLED_APPS = [
-    'channels',
     'rest_framework',
     'corsheaders',
     'auction.apps.AuctionConfig',
