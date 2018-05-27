@@ -2,6 +2,9 @@ package nl.teun.dpi.server.communication.rest
 
 import com.google.gson.Gson
 import nl.teun.dpi.common.data.Auction
+import nl.teun.dpi.common.data.Bid
+import nl.teun.dpi.common.data.serializer.AuctionSerializer
+import nl.teun.dpi.common.data.serializer.BidRestSerializer
 import nl.teun.dpi.common.fromJson
 import nl.teun.dpi.common.toJson
 import okhttp3.MediaType
@@ -20,7 +23,7 @@ class AuctionRestClient {
 
     fun getAuctions(): List<Auction> {
         val request = Request.Builder()
-                .url("$RestAddress/auctions")
+                .url("$RestAddress/auctions/")
                 .get()
                 .build()
         val response = this.httpClient.newCall(request).execute()
@@ -37,7 +40,7 @@ class AuctionRestClient {
         this.auctionCache.removeIf { it.id == auctionId }
 
         val request = Request.Builder()
-                .url("$RestAddress/auctions/$auctionId")
+                .url("$RestAddress/auctions/$auctionId/")
                 .delete()
                 .build()
         val response = this.httpClient.newCall(request).execute()
@@ -51,9 +54,9 @@ class AuctionRestClient {
 
         this.auctionCache.removeIf { it.id == auctionId }
 
-        val requestBody = RequestBody.create(ApplicationJson, auction.toJson())
+        val requestBody = RequestBody.create(ApplicationJson, auction.toJson(AuctionSerializer()))
         val request = Request.Builder()
-                .url("$RestAddress/auctions/$auctionId")
+                .url("$RestAddress/auctions/$auctionId/")
                 .put(requestBody)
                 .build()
         val response = this.httpClient.newCall(request).execute()
@@ -69,9 +72,9 @@ class AuctionRestClient {
         }
         this.auctionCache.add(auction)
 
-        val requestBody = RequestBody.create(ApplicationJson, auction.toJson())
+        val requestBody = RequestBody.create(ApplicationJson, auction.toJson(AuctionSerializer()))
         val request = Request.Builder()
-                .url("$RestAddress/auctions")
+                .url("$RestAddress/auctions/")
                 .post(requestBody)
                 .build()
         val response = this.httpClient.newCall(request).execute()
@@ -80,6 +83,17 @@ class AuctionRestClient {
 
     fun auctionExists(auction: Auction) = this.auctionExists(auction.id)
     fun auctionExists(auctionId: Int) = this.auctionCache.count { it.id == auctionId } > 0
+
+    fun addBid(newBidCopy: Bid): Boolean {
+        val reqJson = newBidCopy.toJson(BidRestSerializer())
+        val requestBody = RequestBody.create(ApplicationJson, reqJson)
+        val request = Request.Builder()
+                .url("$RestAddress/bids/")
+                .post(requestBody)
+                .build()
+        val response = this.httpClient.newCall(request).execute()
+        return response.isSuccessful
+    }
 
     companion object {
         val ApplicationJson = MediaType.parse("application/json")

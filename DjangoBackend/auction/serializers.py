@@ -1,39 +1,38 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from rest_framework.fields import Field
 
 from auction.models import Auction, Bid
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('url', 'username')
+        fields = ('url', 'id', 'username')
 
 
-class BidSerializer(serializers.HyperlinkedModelSerializer):
+class BidSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bid
-        fields = ('url', 'amount', 'bidder', 'auction')
+        fields = ('url', 'id', 'amount', 'bidder', 'auction')
 
 
-class SimpleUserSerializer(serializers.HyperlinkedModelSerializer):
+class SimpleUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('url', 'username')
+        fields = ('url', 'id', 'username')
 
 
-class SimpleBidSerializer(serializers.HyperlinkedModelSerializer):
+class SimpleBidSerializer(serializers.ModelSerializer):
     bidder = SimpleUserSerializer(
         read_only=True
     )
 
     class Meta:
         model = Bid
-        fields = ('url', 'amount', 'bidder')
+        fields = ('url', 'id', 'amount', 'bidder')
 
 
-class AuctionSerializer(serializers.HyperlinkedModelSerializer):
+class AuctionSerializer(serializers.ModelSerializer):
     bids = SimpleBidSerializer(
         many=True,
         read_only=True
@@ -45,4 +44,4 @@ class AuctionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Auction
-        fields = ('url', 'itemName', 'creator', 'bids')
+        fields = ('url', 'id', 'itemName', 'creator', 'bids')

@@ -13,22 +13,29 @@ class KBus {
     val rabbitUtil = RabbitUtil()
 
     inline fun <reified T : Any> sendMessage(obj: T) {
-        rabbitUtil.channel.queueBind(rabbitUtil.queueName, AuctionExchange, T::class.java.canonicalName)
+        rabbitUtil.channel.queueBind(rabbitUtil.queueName, AuctionExchange, this.getQueueNameForType<T>())
         rabbitUtil.channel.basicPublish(AuctionExchange, this.getQueueNameForType<T>(), null, obj.toJson().toByteArray(DefaultCharset))
     }
 
     inline fun <reified T : Any> subscribe(crossinline onMessage: (msg: T) -> Unit) {
         this.rabbitUtil.channel.queueBind(rabbitUtil.queueName, AuctionExchange, this.getQueueNameForType<T>())
-        val consumer = object : DefaultConsumer(rabbitUtil.channel) {
-            @Throws(IOException::class)
-            override fun handleDelivery(consumerTag: String, envelope: Envelope,
-                                        properties: AMQP.BasicProperties?, body: ByteArray?) {
-                val message = String(body!!, DefaultCharset)
-                val obj = Gson().fromJson<T>(message)
-                onMessage(obj)
-            }
-        }
-        rabbitUtil.channel.basicConsume(rabbitUtil.queueName, true, consumer)
+        rabbitUtil.channel.basicConsume(
+                rabbitUtil.queueName,
+                true,
+                { _, message ->
+                    try {
+                        val message = String(message.body!!, DefaultCharset)
+                        val obj = Gson().fromJson<T>(message)
+                        onMessage(obj)
+                    } catch (e:Exception) {
+                        println("Consumer ex")
+                        println(e.toJson())
+                    }
+                },
+                { println("Cancel") },
+                { consumerTag, sig ->
+                    println("Shutdown ${sig.reason.protocolMethodName()}")
+                })
     }
 
     inline fun <reified T> getQueueNameForType(): String = T::class.qualifiedName!!

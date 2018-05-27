@@ -9,7 +9,6 @@ import nl.teun.dpi.common.fromJson
 import nl.teun.dpi.common.toJson
 import java.io.IOException
 
-@Deprecated("Use KBus")
 class CommunicationSubscriber(
         private val auctionTopic: String
 ) {
@@ -17,8 +16,6 @@ class CommunicationSubscriber(
     private val connection: Connection
     val channel: Channel
     val queueName: String
-
-    constructor(auctionTopicBuilder: AuctionTopicBuilder) : this(auctionTopicBuilder.build())
 
     init {
         val connectionFactory = ConnectionFactory()
