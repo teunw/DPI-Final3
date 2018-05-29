@@ -7,6 +7,7 @@ import nl.teun.dpi.server.communication.messaging.KBus
 import nl.teun.dpi.server.communication.messaging.KBusRequestReply
 import nl.teun.dpi.server.communication.rest.AuctionRestClient
 import nl.teun.dpi.common.data.replies.AuctionReply
+import nl.teun.dpi.common.data.replies.NewAuctionReply
 import nl.teun.dpi.common.data.requests.*
 import nl.teun.dpi.server.services.AuctionModule
 import nl.teun.dpi.common.toJson
@@ -23,6 +24,11 @@ fun main(args: Array<String>) {
 
     KBusRequestReply().setupReplier<AuctionRequest, AuctionReply> {
         AuctionReply(auctionRest.getAuctions())
+    }
+
+    KBusRequestReply().setupReplier<NewAuctionRequest, NewAuctionReply> {
+        val auction = auctionRest.addAuction(it.auction)
+        NewAuctionReply(true, updatedAuction = auction)
     }
 
     KBus().subscribe<NewAuctionRequest> {

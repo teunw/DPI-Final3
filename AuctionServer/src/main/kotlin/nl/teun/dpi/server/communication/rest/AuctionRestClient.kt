@@ -47,7 +47,7 @@ class AuctionRestClient {
         return response.isSuccessful
     }
 
-    fun editAuction(auctionId: Int, auction: Auction): Boolean {
+    fun editAuction(auctionId: Int, auction: Auction): Auction {
         if (!this.auctionExists(auctionId)) {
             throw Exception("Auction does not exist")
         }
@@ -63,10 +63,10 @@ class AuctionRestClient {
         val jsonAuction = Gson().fromJson<Auction>(response.body()!!.string())
 
         this.auctionCache.add(jsonAuction)
-        return response.isSuccessful
+        return Gson().fromJson<Auction>(response.body()!!.string())
     }
 
-    fun addAuction(auction: Auction): Boolean {
+    fun addAuction(auction: Auction): Auction {
         if (this.auctionExists(auction)) {
             throw Exception("Auction already exists")
         }
@@ -78,7 +78,7 @@ class AuctionRestClient {
                 .post(requestBody)
                 .build()
         val response = this.httpClient.newCall(request).execute()
-        return response.isSuccessful
+        return Gson().fromJson<Auction>(response.body()!!.string())
     }
 
     fun auctionExists(auction: Auction) = this.auctionExists(auction.id)
