@@ -1,6 +1,8 @@
 package nl.teun.dpi.server
 
 import com.google.inject.Guice
+import nl.teun.dpi.common.data.Auction
+import nl.teun.dpi.common.data.User
 import nl.teun.dpi.common.data.notifications.NewBidNotification
 import nl.teun.dpi.server.builder.CommunicationSubscriber
 import nl.teun.dpi.server.communication.messaging.KBus
@@ -27,13 +29,13 @@ fun main(args: Array<String>) {
     }
 
     KBusRequestReply().setupReplier<NewAuctionRequest, NewAuctionReply> {
-        val auction = auctionRest.addAuction(it.auction)
-        NewAuctionReply(true, updatedAuction = auction)
-    }
+        try {
+            val auction = auctionRest.addAuction(Auction(itemName = it.itemName, creator = auctionRest.getUser(it.username)))
+            NewAuctionReply(true, updatedAuction = auction)
+        } catch (e:Exception) {
+            NewAuctionReply(false, reason = "User not found!")
+        }
 
-    KBus().subscribe<NewAuctionRequest> {
-        auctionRest.addAuction(it.auction)
-        println("Added new auction: ${it.auction.toJson()}")
     }
 
     KBus().subscribe<AuctionDeleteRequest> {

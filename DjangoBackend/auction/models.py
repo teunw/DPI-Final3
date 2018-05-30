@@ -4,20 +4,26 @@ from django.contrib.auth.models import User
 
 class Auction(models.Model):
     itemName = models.CharField(max_length=32)
-    creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return '{} by {}'.format(self.itemName, self.creator.username)
+        username = ""
+        if self.creator is not None:
+            username = " by {}".format(self.creator.username)
+        return '{}{}'.format(self.itemName, username)
 
 
 class Bid(models.Model):
     amount = models.IntegerField()
     bidder = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    auction = models.ForeignKey(Auction, on_delete=models.SET_NULL, null=True, related_name="bids")
+    auction = models.ForeignKey(Auction, on_delete=models.SET_NULL, null=True, blank=True, related_name="bids")
 
     def __str__(self):
-        return '€{} by {} on {}\'s {}' \
+        username = ""
+        if self.auction.creator is not None:
+            username = self.auction.creator.username
+
+        return '€{} by {} on: {}' \
             .format(self.amount,
                     self.bidder.username,
-                    self.auction.creator.username,
-                    self.auction.itemName)
+                    self.auction)
