@@ -1,5 +1,7 @@
 package nl.teun.dpi.client
 
+import nl.teun.dpi.client.rest.AuthTokenRequestBody
+import nl.teun.dpi.client.rest.AuthenticationHandler
 import nl.teun.dpi.common.data.Auction
 import nl.teun.dpi.common.data.Bid
 import nl.teun.dpi.common.data.User
@@ -23,7 +25,12 @@ class AuctionCmd {
     }
 
     val scanner = Scanner(System.`in`)
+    val authHandler = AuthenticationHandler()
+
     fun start(args: Array<String>) {
+        println("Before you can continue, you should login")
+        login()
+
         println("Getting auctions ....")
 
         val auctions: MutableList<Auction> = mutableListOf()
@@ -45,6 +52,17 @@ class AuctionCmd {
                         viewAuction(auctions[auctionId])
                     }
                 })
+    }
+
+    fun login() {
+        println("Login using your username and password")
+        print("Username: ")
+        val username = scanner.nextLine()
+
+        print("Password: ")
+        val password = scanner.nextLine()
+
+        authHandler.login(AuthTokenRequestBody(username, password))
     }
 
     fun createAuction(name: String) {
@@ -72,9 +90,9 @@ class AuctionCmd {
         KBus().subscribe<NewBidNotification>({
             println("New bid by ${it.bid.bidder!!.username}: €${it.bid.amount}")
         })
-        val syntaxRegex = Regex("[0-9]+:[0-9]+")
+        val syntaxRegex = Regex("[0-9]+")
         while (!Thread.interrupted()) {
-            println("You can bid with userid:amount")
+            println("You can bid by typing a number")
 
             val nextLine = scanner.nextLine()
             if (!syntaxRegex.matches(nextLine)) {
@@ -82,8 +100,7 @@ class AuctionCmd {
                 continue
             }
 
-            val id = nextLine.split(":")[0]
-            val amount = nextLine.split(":")[1].toInt()
+            val amount = nextLine.toInt()
             val bid = Bid(amount = amount, auction = selectedAuction, bidder = User(id = id.toInt(), username = ""))
             KBus().sendMessage(NewBidRequest(bid))
         }

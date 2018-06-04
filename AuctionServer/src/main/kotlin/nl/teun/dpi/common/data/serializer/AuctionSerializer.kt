@@ -5,8 +5,6 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import nl.teun.dpi.common.data.Auction
-import nl.teun.dpi.common.data.Bid
-import nl.teun.dpi.server.communication.rest.RestAddress
 import java.lang.reflect.Type
 
 class AuctionSerializer : JsonSerializer<Auction> {

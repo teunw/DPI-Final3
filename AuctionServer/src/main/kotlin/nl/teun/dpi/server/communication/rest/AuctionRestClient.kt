@@ -6,6 +6,8 @@ import nl.teun.dpi.common.data.Bid
 import nl.teun.dpi.common.data.serializer.AuctionSerializer
 import nl.teun.dpi.common.data.serializer.BidRestSerializer
 import nl.teun.dpi.common.fromJson
+import nl.teun.dpi.common.rest.ApplicationJson
+import nl.teun.dpi.common.rest.RestAddress
 import nl.teun.dpi.common.toJson
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
@@ -96,6 +98,5 @@ class AuctionRestClient {
     }
 
     companion object {
-        val ApplicationJson = MediaType.parse("application/json")
     }
 }

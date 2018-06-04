@@ -1,6 +1,7 @@
 from django.conf.urls import url, include
-from django.contrib.auth.models import User
-from rest_framework import routers, serializers, viewsets
+from rest_framework import routers
+from rest_framework.authtoken import views as authviews
+from .views import AuthUserViewset
 
 from auction import views
 
@@ -13,5 +14,7 @@ router.register(r'bids', views.BidViewSet)
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     url(r'^', include(router.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    url(r'^auth-user/', AuthUserViewset.as_view()),
+    url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^auth/token', authviews.obtain_auth_token)
 ]
