@@ -5,14 +5,14 @@ from auction.models import Auction, Bid
 
 
 class AuctionAdmin(admin.ModelAdmin):
-    all_fields = ('itemName', 'creator')
+    all_fields = ('id', 'itemName', 'creator')
     list_display = all_fields
     list_display_links = all_fields
     search_fields = all_fields
 
 
 class BidAdmin(admin.ModelAdmin):
-    all_fields = ('amount', 'bidder', 'auction')
+    all_fields = ('id', 'amount', 'auction', 'bidder')
     list_display = all_fields
     list_display_links = all_fields
     search_fields = all_fields

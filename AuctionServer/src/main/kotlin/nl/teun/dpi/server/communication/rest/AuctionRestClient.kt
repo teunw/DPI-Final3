@@ -3,6 +3,7 @@ package nl.teun.dpi.server.communication.rest
 import com.google.gson.Gson
 import nl.teun.dpi.common.data.Auction
 import nl.teun.dpi.common.data.Bid
+import nl.teun.dpi.common.data.User
 import nl.teun.dpi.common.data.serializer.AuctionSerializer
 import nl.teun.dpi.common.data.serializer.BidRestSerializer
 import nl.teun.dpi.common.fromJson
@@ -66,6 +67,16 @@ class AuctionRestClient {
 
         this.auctionCache.add(jsonAuction)
         return Gson().fromJson<Auction>(response.body()!!.string())
+    }
+
+    fun getUser(username: String): User {
+        val request = Request.Builder()
+                .url("$RestAddress/users")
+                .get()
+                .build()
+        val response = this.httpClient.newCall(request).execute()
+        val userArr = Gson().fromJson<List<User>>(response.body()!!.string())
+        return userArr.find { it.username == username } ?: throw Exception("User not found")
     }
 
     fun addAuction(auction: Auction): Auction {

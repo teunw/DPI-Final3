@@ -31,6 +31,9 @@ class AuctionCmd {
         println("Before you can continue, you should login")
         login()
 
+        println("Enter your usename")
+        val username = scanner.nextLine()
+
         println("Getting auctions ....")
 
         val auctions: MutableList<Auction> = mutableListOf()
@@ -47,7 +50,7 @@ class AuctionCmd {
                     val nextLine = scanner.nextLine()
                     val auctionId = nextLine.toIntOrNull()
                     if (auctionId == null) {
-                        createAuction(nextLine)
+                        createAuction(nextLine, username)
                     } else {
                         viewAuction(auctions[auctionId])
                     }
@@ -65,15 +68,14 @@ class AuctionCmd {
         authHandler.login(AuthTokenRequestBody(username, password))
     }
 
-    fun createAuction(name: String) {
-        val auction = Auction(itemName = name)
-        val newAuctionRequest = NewAuctionRequest(auction)
+    fun createAuction(itemName: String, username: String) {
+        val newAuctionRequest = NewAuctionRequest(itemName, username)
         KBusRequestReply().requestMessage<NewAuctionRequest, NewAuctionReply>(newAuctionRequest, {
             if (!it.accepted) {
                 println("Auction could not be created")
                 println(it.reason)
             } else {
-                viewAuction(it.updatedAuction)
+                viewAuction(it.updatedAuction!!)
             }
         })
         AuctionCmd.main(emptyArray())

@@ -6,5 +6,5 @@ import java.io.Serializable
 data class NewAuctionReply(
         val accepted: Boolean = false,
         val reason: String? = null,
-        val updatedAuction: Auction
+        val updatedAuction: Auction? = null
 ) : Serializable
