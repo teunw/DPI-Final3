@@ -1,7 +1,7 @@
 package nl.teun.dpi.client
 
 import nl.teun.dpi.client.rest.AuthTokenRequestBody
-import nl.teun.dpi.client.rest.AuthenticationHandler
+import nl.teun.dpi.common.rest.AuthenticationHandler
 import nl.teun.dpi.common.data.Auction
 import nl.teun.dpi.common.data.Bid
 import nl.teun.dpi.common.data.User
@@ -31,9 +31,6 @@ class AuctionCmd {
         println("Before you can continue, you should login")
         login()
 
-        println("Enter your usename")
-        val username = scanner.nextLine()
-
         println("Getting auctions ....")
 
         val auctions: MutableList<Auction> = mutableListOf()
@@ -49,10 +46,14 @@ class AuctionCmd {
 
                     val nextLine = scanner.nextLine()
                     val auctionId = nextLine.toIntOrNull()
-                    if (auctionId == null) {
-                        createAuction(nextLine, username)
-                    } else {
-                        viewAuction(auctions[auctionId])
+                    try {
+                        if (auctionId == null) {
+                            createAuction(nextLine)
+                        } else {
+                            viewAuction(auctions[auctionId])
+                        }
+                    } catch (e:Exception) {
+                        println(e.message)
                     }
                 })
     }
@@ -65,11 +66,17 @@ class AuctionCmd {
         print("Password: ")
         val password = scanner.nextLine()
 
-        authHandler.login(AuthTokenRequestBody(username, password))
+        try {
+            authHandler.login(AuthTokenRequestBody(username, password))
+        } catch (e: Exception) {
+            println("Invalid username or password, try again")
+            println()
+            login()
+        }
     }
 
-    fun createAuction(itemName: String, username: String) {
-        val newAuctionRequest = NewAuctionRequest(itemName, username)
+    fun createAuction(itemName: String) {
+        val newAuctionRequest = NewAuctionRequest(itemName, authHandler.token!!)
         KBusRequestReply().requestMessage<NewAuctionRequest, NewAuctionReply>(newAuctionRequest, {
             if (!it.accepted) {
                 println("Auction could not be created")
@@ -90,7 +97,7 @@ class AuctionCmd {
         println(selectedAuction.bids.first().toString())
 
         KBus().subscribe<NewBidNotification>({
-            println("New bid by ${it.bid.bidder!!.username}: €${it.bid.amount}")
+            println("New bid by ${it.bid.bidder?.username ?: "NULL"}: €${it.bid.amount}")
         })
         val syntaxRegex = Regex("[0-9]+")
         while (!Thread.interrupted()) {
@@ -103,7 +110,8 @@ class AuctionCmd {
             }
 
             val amount = nextLine.toInt()
-            val bid = Bid(amount = amount, auction = selectedAuction, bidder = User(id = id.toInt(), username = ""))
+            val user = authHandler.getUser()
+            val bid = Bid(amount = amount, auction = selectedAuction, bidder = user)
             KBus().sendMessage(NewBidRequest(bid))
         }
     }

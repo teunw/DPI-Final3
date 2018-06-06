@@ -8,9 +8,9 @@ import nl.teun.dpi.common.data.serializer.AuctionSerializer
 import nl.teun.dpi.common.data.serializer.BidRestSerializer
 import nl.teun.dpi.common.fromJson
 import nl.teun.dpi.common.rest.ApplicationJson
+import nl.teun.dpi.common.rest.AuthCheckResponse
 import nl.teun.dpi.common.rest.RestAddress
 import nl.teun.dpi.common.toJson
-import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -77,6 +77,17 @@ class AuctionRestClient {
         val response = this.httpClient.newCall(request).execute()
         val userArr = Gson().fromJson<List<User>>(response.body()!!.string())
         return userArr.find { it.username == username } ?: throw Exception("User not found")
+    }
+
+    fun getUserWithToken(token:String): AuthCheckResponse {
+        val request = Request.Builder()
+                .url("$RestAddress/auth-user/")
+                .header("Authorization", token)
+                .get()
+                .build()
+        val response = this.httpClient.newCall(request).execute()
+        val userCheck = Gson().fromJson<AuthCheckResponse>(response.body()!!.string())
+        return userCheck
     }
 
     fun addAuction(auction: Auction): Auction {
